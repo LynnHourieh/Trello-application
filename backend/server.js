@@ -2,6 +2,10 @@ import dotenv from "dotenv";
 import express from "express";
 //pg libraray to interact with postgres database
 import pkg from "pg";
+import columnsRouter from "./routes/columnsRoute.js";
+import tagsRouter from "./routes/tagsRoute.js";
+import logsRouter from "./routes/logsRoute.js";
+import cardsRouter from "./routes/cardsRoute.js";
 const { Pool } = pkg;
 
 // Load environment variables from .env file
@@ -33,9 +37,19 @@ pool
   });
 
 // Example API route to interact with the database
-app.get("/", async (req, res) => {
-  res.send("Hello World!");
-});
+// app.get("/", async (req, res) => {
+//   res.send("Hello World!");
+// });
+
+app.use(express.json());
+
+//middleware to parse url-encoded data (usually used in forms);
+app.use(express.urlencoded({extended:true}))
+
+app.use('/api', columnsRouter);
+app.use('/api', tagsRouter);
+app.use('/api', logsRouter);
+app.use('/api', cardsRouter);
 
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);

@@ -1,0 +1,60 @@
+@import "../../themes.scss";
+
+.column {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background-color: #f4f4f4;
+  padding: 16px;
+  width: 255px;
+  margin: 10px;
+  height: 461px;
+
+  .column-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: $secondary;
+    height: 40px;
+  }
+
+  .column-body {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    width: 270px;
+    margin-bottom: 16px;
+    /* Set a fixed height for the column body */
+    height: 390px; /* Adjust height to fit 3 cards */
+    overflow-y: auto; /* Allow vertical scrolling */
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+  }
+
+  .column-footer {
+    display: flex;
+    justify-content: center;
+   
+    button {
+      width: 260px;
+      color: $text-secondary;
+      font-size: 14px;
+      &:hover{
+        color:$secondary
+      }
+    }
+  }
+
+  .add-card-button {
+    padding: 10px 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
+}

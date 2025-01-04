@@ -1,0 +1,58 @@
+// Global colors
+
+$primary: #131339;
+$primary-dark: #0e0e2b;
+$secondary: #8134af;
+$secondary-light: #b080cd;
+$secondary-dark: #612783;
+$red: #ff0606;
+$red-dark: #bf0505;
+$red-light: #ff9292;
+
+// Text colors
+
+$text-secondary: #5b5b5b;
+$text-primary: #131339;
+$text-placeholder: #868686;
+$text-disabled: #878787;
+
+// Button colors
+
+$btn-disabled: #ededed;
+
+// Background colors
+
+$primary-bg: #fff;
+$secondary-bg: #fefefe;
+$error-bg: #fff8f8;
+$home-bg:#EFEFEF;
+
+// Border colors
+
+$border-field: #ddd;
+$border-default: #aeaeae26;
+
+// Border styling
+
+$border-radius: 6px;
+
+// Global spacing
+
+$vertical-gap: 12px;
+
+// Padding
+
+$default-padding: 1.9rem;
+$padding-sm: 1.1rem;
+$padding-md: 1.5rem;
+$padding-lg: 1.9rem;
+
+// Shadows
+
+$shadow-sm: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+$shadow-md:
+  rgba(0, 0, 0, 0.1) 0px 1px 3px 0px,
+  rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
+$shadow-lg:
+  rgba(0, 0, 0, 0.1) 0px 4px 6px -1px,
+  rgba(0, 0, 0, 0.06) 0px 2px 4px -1px;

@@ -1,0 +1,29 @@
+@import "../../themes.scss";
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $padding-sm;
+  background-color: $home-bg;
+  color: $secondary;
+}
+
+.navbar-left .logo {
+  font-size: 18px;
+  text-decoration: none;
+  color: $secondary;
+}
+
+.navbar-right {
+  button {
+    border-radius: 50%;
+    svg {
+      width: 24px;
+      height: 24px;
+    }
+    &:hover {
+      border-radius: 50%;
+    }
+  }
+}

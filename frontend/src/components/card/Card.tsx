@@ -6,11 +6,9 @@ const Card: React.FC<CardProps> = ({
   title,
   description,
   tagName,
-  tagColor = "#8134af",
+  backgroundColor = "#8134af",
+  fontColor="#FFFFF",
   id,
-  column_id,
-  onDrop,
-  position,
   setActiveCard
 }) => {
   if (!tagName || !title) return null;
@@ -27,7 +25,7 @@ const Card: React.FC<CardProps> = ({
       onDragEnd={()=>setActiveCard?.(null)}
   
     >
-      <div className="card-header" style={{ backgroundColor: tagColor }}>
+      <div className="card-header" style={{ backgroundColor: backgroundColor , color: fontColor  }}>
         <span className="tag">{tagName}</span>
       </div>
       <div className="card-body">

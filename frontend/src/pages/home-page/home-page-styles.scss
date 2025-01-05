@@ -25,6 +25,10 @@
     }
   }
 }
+.homepage-colorSelectors{
+  display: flex;
+  gap: 50px;
+}
 
 .homepage-modalActionButtons {
   display: flex;
@@ -55,19 +59,30 @@
 }
 
 #homepage-select {
-  width: 452px;
+  width: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-  Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
 .homepage-select {
+  display: flex;
+  gap: 5px;
+  align-items: end;
+  button {
+    height: 42px;
+    width: 106px;
+  }
   .select-root {
+    width: 340px;
+   
     .select-optionsContainer {
       ul {
         max-width: 440px;
         overflow-x: hidden;
         overflow-y: auto;
-        li{width: 422px;}
+        li {
+          width: 422px;
+        }
       }
     }
   }

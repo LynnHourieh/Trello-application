@@ -51,7 +51,8 @@ function HomePage() {
 
   const [tagDetails, setTagDetails] = useState({
     tag_name: "",
-    tag_color: "#8134af",
+    bg_color: "#8134af",
+    font_color:"#FFFF"
   });
 
   const [cards, setCards] = useState<CardProps[]>([]);
@@ -60,10 +61,6 @@ function HomePage() {
       text: tag.name,
       value: tag.id,
     })),
-    {
-      text: "Create a New Tag",
-      value: "0",
-    },
   ];
 
   const fetchColumns = async () => {
@@ -111,7 +108,8 @@ function HomePage() {
       },
       body: JSON.stringify({
         name: tagDetails.tag_name,
-        color: tagDetails.tag_color,
+        bg_color: tagDetails.bg_color,
+        font_color:tagDetails.font_color
       }),
     });
 
@@ -182,11 +180,6 @@ function HomePage() {
   };
 
   const handleInputChange = (name: string, value: string) => {
-    if (name === "card_tag" && value === "0") {
-      //open modal
-      setIsTagModalOpen(true);
-      return;
-    }
     setCardDetails((prevDetails) => ({
       ...prevDetails,
       [name]: value,
@@ -243,7 +236,7 @@ function HomePage() {
     }
 
     const data = await response.json();
-    const { cards } = data;
+    const { cards, movedToNewColumn, movedDirection } = data;
 
     setCards((prevCards) => {
       const updatedCardIds = cards.map((card) => card.id);
@@ -253,6 +246,36 @@ function HomePage() {
 
       return [...remainingCards, ...cards];
     });
+    // Retrieve card title and column name for logging
+    const movedCard = cards.find((card) => card.id === activeCard);
+    const cardTitle = movedCard?.title || "Unknown card";
+    const targetColumn = columns.find((col) => col.id === targetColumnId);
+    const columnName = targetColumn?.name || "Unknown column";
+
+    // Prepare log description
+    const description = movedToNewColumn
+      ? `'${cardTitle}' was moved to '${columnName}'`
+      : `'${cardTitle}' was moved ${movedDirection} within the column '${columnName}'`;
+
+    // Call addLog with the dynamic description
+    await addLog(description);
+  };
+
+  const addLog = async (description) => {
+    const response = await fetch(`${process.env.REACT_APP_URL}/logs`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ description }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to add log");
+    }
+
+    const newLog = await response.json();
+    console.log("newLog", newLog);
   };
 
   return (
@@ -269,7 +292,8 @@ function HomePage() {
               return {
                 ...card,
                 tagName: tag?.name || "No Tag",
-                tagColor: tag?.color || "#000000",
+                fontColor: tag?.font_color || "#000000",
+                backgroundColor:tag?.bg_color || "#FFFF"
               };
             });
 
@@ -344,6 +368,7 @@ function HomePage() {
               placeholder={"Select a Tag..."}
               options={tagOptions}
             />
+            <Button variant="secondary" text="Add Tag " onClickHandler={()=>{setIsTagModalOpen(true)}}/>
           </div>
 
           <div className="homepage-modalActionButtons">
@@ -401,13 +426,21 @@ function HomePage() {
               );
             }}
           />
-          <ColorPicker
-            name="tag_color"
-            value={tagDetails.tag_color}
+          <div className="homepage-colorSelectors"><ColorPicker
+            name="bg_color"
+            value={tagDetails.bg_color}
             onChange={handleTagChange}
-            label={"Tag Color"}
+            label={"Background Color"}
             placeholder={"Choose Tag Color ... "}
           />
+            <ColorPicker
+            name="font_color"
+            value={tagDetails.font_color}
+            onChange={handleTagChange}
+            label={"Font Color"}
+            placeholder={"Choose Tag Color ... "}
+          /></div>
+          
           <div className="homepage-modalActionButtons">
             <Button
               text={"Add"}

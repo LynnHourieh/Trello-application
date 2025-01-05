@@ -16,15 +16,15 @@ tagsRouter.get("/tags", async (req, res) => {
 // Add a new tag
 tagsRouter.post("/tags", async (req, res) => {
     try {
-      const { name, color } = req.body;
+      const { name, bg_color,font_color } = req.body;
   
-      if (!name || !color) {
+      if (!name || !bg_color || !font_color) {
         return res.status(400).json({ error: "Name and color are required" });
       }
   
       const result = await query(
-        "INSERT INTO tags (name, color) VALUES ($1, $2) RETURNING *",
-        [name, color]
+        "INSERT INTO tags (name, bg_color, font_color) VALUES ($1, $2, $3) RETURNING *",
+        [name, bg_color, font_color] 
       );
   
       res.status(201).json(result.rows[0]);

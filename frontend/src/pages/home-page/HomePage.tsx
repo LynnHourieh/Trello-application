@@ -21,8 +21,6 @@ function HomePage() {
   const {
     control: cardControl,
     handleSubmit: handleCardSubmit,
-    reset: resetCard,
-    formState: cardFormState,
   } = useForm({
     mode: "all",
   });
@@ -31,7 +29,6 @@ function HomePage() {
     control: tagControl,
     handleSubmit: handleTagSubmit,
     reset: resetTag,
-    formState: tagFormState,
   } = useForm({
     mode: "all",
   });
@@ -47,12 +44,18 @@ function HomePage() {
     card_tag: "",
   });
 
+  const columnsData = [
+    { id: 1, name: "Backlog" },
+    { id: 2, name: "To do" },
+    { id: 3, name: "Done" },
+  ];
+
   const [activeCard, setActiveCard] = useState<number | null>(null);
 
   const [tagDetails, setTagDetails] = useState({
     tag_name: "",
     bg_color: "#8134af",
-    font_color:"#FFFF"
+    font_color: "#FFFF",
   });
 
   const [cards, setCards] = useState<CardProps[]>([]);
@@ -79,7 +82,9 @@ function HomePage() {
 
         // Store the fetched data in localStorage
         localStorage.setItem("columnsData", JSON.stringify(data));
-        setColumns(data);
+        console.log("data",data)
+        
+        setColumns(data.length === 0 ? columnsData : data);
       } catch (error) {
         console.error("Error fetching columns data:", error);
       }
@@ -109,7 +114,7 @@ function HomePage() {
       body: JSON.stringify({
         name: tagDetails.tag_name,
         bg_color: tagDetails.bg_color,
-        font_color:tagDetails.font_color
+        font_color: tagDetails.font_color,
       }),
     });
 
@@ -293,7 +298,7 @@ function HomePage() {
                 ...card,
                 tagName: tag?.name || "No Tag",
                 fontColor: tag?.font_color || "#000000",
-                backgroundColor:tag?.bg_color || "#FFFF"
+                backgroundColor: tag?.bg_color || "#FFFF",
               };
             });
 
@@ -368,7 +373,13 @@ function HomePage() {
               placeholder={"Select a Tag..."}
               options={tagOptions}
             />
-            <Button variant="secondary" text="Add Tag " onClickHandler={()=>{setIsTagModalOpen(true)}}/>
+            <Button
+              variant="secondary"
+              text="Add Tag "
+              onClickHandler={() => {
+                setIsTagModalOpen(true);
+              }}
+            />
           </div>
 
           <div className="homepage-modalActionButtons">
@@ -426,21 +437,23 @@ function HomePage() {
               );
             }}
           />
-          <div className="homepage-colorSelectors"><ColorPicker
-            name="bg_color"
-            value={tagDetails.bg_color}
-            onChange={handleTagChange}
-            label={"Background Color"}
-            placeholder={"Choose Tag Color ... "}
-          />
+          <div className="homepage-colorSelectors">
             <ColorPicker
-            name="font_color"
-            value={tagDetails.font_color}
-            onChange={handleTagChange}
-            label={"Font Color"}
-            placeholder={"Choose Tag Color ... "}
-          /></div>
-          
+              name="bg_color"
+              value={tagDetails.bg_color}
+              onChange={handleTagChange}
+              label={"Background Color"}
+              placeholder={"Choose Tag Color ... "}
+            />
+            <ColorPicker
+              name="font_color"
+              value={tagDetails.font_color}
+              onChange={handleTagChange}
+              label={"Font Color"}
+              placeholder={"Choose Tag Color ... "}
+            />
+          </div>
+
           <div className="homepage-modalActionButtons">
             <Button
               text={"Add"}

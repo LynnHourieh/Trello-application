@@ -18,10 +18,7 @@ function HomePage() {
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<number | null>(null);
-  const {
-    control: cardControl,
-    handleSubmit: handleCardSubmit,
-  } = useForm({
+  const { control: cardControl, handleSubmit: handleCardSubmit } = useForm({
     mode: "all",
   });
 
@@ -69,7 +66,7 @@ function HomePage() {
   const fetchColumns = async () => {
     const storedColumns = localStorage.getItem("columnsData");
 
-    if (storedColumns) {
+    if (storedColumns?.length === 0) {
       setColumns(JSON.parse(storedColumns));
     } else {
       try {
@@ -79,12 +76,10 @@ function HomePage() {
           throw new Error("Failed to fetch columns data");
         }
         const data = await response.json();
-
-        // Store the fetched data in localStorage
-        localStorage.setItem("columnsData", JSON.stringify(data));
-        console.log("data",data)
-        
+        let storedColumnData = data.length === 0 ? columnsData : data;
+        console.log("data", data);
         setColumns(data.length === 0 ? columnsData : data);
+        localStorage.setItem("columnsData", JSON.stringify(storedColumnData));
       } catch (error) {
         console.error("Error fetching columns data:", error);
       }
@@ -287,13 +282,13 @@ function HomePage() {
     <>
       {" "}
       <div className="homepage-container">
-        {tags.length > 0 &&
+        {
           columns.map((column) => {
             const filteredCards = cards.filter(
               (card) => card.column_id === column.id
             );
             const cardsWithTagDetails = filteredCards.map((card) => {
-              const tag = tags.find((tag) => tag.id === card.tag_id);
+              const tag = tags?.find((tag) => tag.id === card.tag_id);
               return {
                 ...card,
                 tagName: tag?.name || "No Tag",
@@ -370,8 +365,9 @@ function HomePage() {
               value={cardDetails.card_tag}
               label={"Tag"}
               onChange={handleInputChange}
-              placeholder={"Select a Tag..."}
+              placeholder={tagOptions.length !== 0 ? "Select a Tag..." : "Add a new Tag"}
               options={tagOptions}
+              disabled={tagOptions.length === 0}
             />
             <Button
               variant="secondary"

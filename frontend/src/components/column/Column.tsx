@@ -26,10 +26,9 @@ const Column: React.FC<ColumnProps> = ({
               title={card.title}
               description={card.description}
               tagName={card.tagName}
-              tagColor={card.tagColor}
+              fontColor={card.fontColor}
+              backgroundColor={card.backgroundColor}
               id={card.id}
-              column_id={card.column_id}
-              position={index + 1}
               setActiveCard={setActiveCard}
             />
             <Skeleton onDrop={() => onDrop?.(id || 0, index + 2)} />

@@ -1,0 +1,40 @@
+@import "../../themes.scss";
+
+.card-logs {
+  border: 1px solid #ddd;
+  border-radius: $border-radius;
+  background-color: #f9f9f9;
+  margin: $padding-sm;
+  padding: $padding-sm;
+  max-width: 100%;
+}
+
+.card-logs-header {
+  h3 {
+    padding: unset;
+    margin: unset;
+    color: $secondary;
+  }
+}
+
+.card-log-entry{
+padding: 10px 0px;
+}
+
+.card-logs-group ul {
+  padding:unset;
+  margin: unset;
+}
+
+.card-logs-group li {
+  list-style-type: none;
+  color: #555;
+}
+
+.card-logs-group {
+  padding: $padding-sm;
+  border: 1px solid $border-field;
+  background-color: $home-bg;
+  margin: $padding-sm;
+  border-radius: $border-radius;
+}

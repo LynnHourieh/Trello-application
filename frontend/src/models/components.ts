@@ -64,7 +64,8 @@ export interface ColumnProps {
 export interface TagProps {
   name: string;
   id: string;
-  color: string;
+  bg_color: string;
+  font_color:string
 }
 
 export interface CardProps {
@@ -75,7 +76,8 @@ export interface CardProps {
   tag_id?: string;
   position?: number;
   tagName?: string;
-  tagColor?: string;
+  fontColor?: string;
+  backgroundColor?:string;
   onDrop?: (targetColumnId: number, targetPosition: number) => void;
   setActiveCard?: (isActive: number | null) => void;
 }
@@ -131,4 +133,14 @@ export interface ColorPickerProps {
   placeholder?: string;
   value: string;
   onChange?: (name: string, value: string) => void;
+}
+
+interface LogEntry {
+  id: number;
+  description: string;
+  timestamp: string;
+}
+
+export interface CardLogsProps {
+  logs: LogEntry[];
 }

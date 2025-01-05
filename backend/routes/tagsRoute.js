@@ -2,7 +2,7 @@ import express from "express";
 import { query } from "../server.js";
 const tagsRouter = express.Router();
 
-// Get all columns
+// Get all tags
 tagsRouter.get("/tags", async (req, res) => {
   try {
     const result = await query("SELECT * FROM tags");

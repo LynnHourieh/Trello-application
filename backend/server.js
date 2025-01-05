@@ -6,13 +6,20 @@ import columnsRouter from "./routes/columnsRoute.js";
 import tagsRouter from "./routes/tagsRoute.js";
 import logsRouter from "./routes/logsRoute.js";
 import cardsRouter from "./routes/cardsRoute.js";
+import cors from "cors";
 const { Pool } = pkg;
 
 // Load environment variables from .env file
 dotenv.config();
-
 const app = express();
-const port = process.env.port || 8000;
+const port = process.env.PORT || 8000;
+
+// Enable CORS for all domains or specifically for your frontend domain
+app.use(cors({
+  origin: "http://localhost:3000", // Allow requests from the frontend (localhost:3000)
+  methods: "GET,POST,PUT,DELETE", // Allow specific methods if needed
+  allowedHeaders: "Content-Type, Authorization", // Allow specific headers
+}));
 
 // Set up PostgreSQL connection using the Pool (connection pooling)
 const pool = new Pool({

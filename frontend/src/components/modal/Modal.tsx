@@ -63,7 +63,7 @@ const Modal: React.FC<ModalProps> = ({
         <div ref={contentRef} onScroll={handleScroll} className="modal-body">
           {children}
         </div>
-        {modalActions && (
+        {!!modalActions?.length && (
           <div className="modal-footer">
             {modalActions.map((action, index) => (
               <Button key={index} {...action} />

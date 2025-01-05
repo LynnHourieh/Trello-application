@@ -46,6 +46,7 @@ const ColorPicker: React.FC<ColorPickerProps> = ({
       <div className="colorPicker-root">
         {label && <label htmlFor={name}>{label}</label>}
         <button
+          type="button"
           onClick={() => setIsPickerOpen(true)}
           className="colorPicker-button"
         >

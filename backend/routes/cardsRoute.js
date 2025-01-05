@@ -2,20 +2,13 @@ import express from "express";
 import { query } from "../server.js";
 const cardsRouter = express.Router();
 
-// Get all cards for a specific column id, ordered by position
+
+//get all cards 
 cardsRouter.get("/cards", async (req, res) => {
   try {
-    const { column_id } = req.query; // Get column_id from query parameters
-
-    // Validate the column_id
-    if (!column_id) {
-      return res.status(400).json({ error: "column_id is required" });
-    }
-
-    // Get all cards for the specific column_id, ordered by position
+    // Get all cards ordered by position
     const result = await query(
-      "SELECT * FROM cards WHERE column_id = $1 ORDER BY position",
-      [column_id]
+      "SELECT * FROM cards ORDER BY position"
     );
 
     res.json(result.rows); // Send the result as a JSON response
@@ -24,6 +17,7 @@ cardsRouter.get("/cards", async (req, res) => {
     res.status(500).send("Server error");
   }
 });
+
 
 // Add a new card
 cardsRouter.post("/cards", async (req, res) => {
@@ -126,8 +120,9 @@ cardsRouter.put("/cards/:id/position", async (req, res) => {
         // Return the updated lists of cards in both columns
         return res.status(200).json({
           message: "Card moved to new column and position updated successfully",
-          sourceColumnCards: allCardsInSourceColumn.rows,
-          targetColumnCards: allCardsInTargetColumn.rows,
+          cards: [...allCardsInSourceColumn.rows, ...allCardsInTargetColumn.rows],
+          // sourceColumnCards: allCardsInSourceColumn.rows,
+          // targetColumnCards: allCardsInTargetColumn.rows,
         });
       }
   

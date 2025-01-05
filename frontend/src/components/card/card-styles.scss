@@ -7,6 +7,7 @@
     overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     min-height: 142px;
+    cursor: grab;
   }
   .card:hover {
     border: 1px solid $secondary; /* Change to your desired color on hover */

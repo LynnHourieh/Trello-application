@@ -1,44 +1,51 @@
-import React, { useState } from "react";
-import Card from "../card/Card.tsx"; // Import Card component
-import "./column-styles.scss"; // SCSS for styling the column component
+import React from "react";
+import Card from "../card/Card.tsx";
+import "./column-styles.scss"; 
 import { AddIcon } from "../../assests/images/icons.tsx";
-import Modal from "../modal/Modal.tsx";
 import Button from "../button/Button.tsx";
 import { ColumnProps } from "../../models/components.ts";
+import Skeleton from "../skeleton/Skeleton.tsx";
 
-const Column: React.FC<ColumnProps> = ({ title, cards, onClick }) => {
-  const [cardList, setCardList] = useState(cards);
 
+const Column: React.FC<ColumnProps> = ({
+  id,
+  name,
+  cards,
+  onClick,
+  setActiveCard,
+  onDrop,
+}) => {
   return (
-    <>
-      <div className="column">
-        {/* Column Header */}
-        <div className="column-header">{title}</div>
-
-        {/* Column Body (List of Cards) */}
-        <div className="column-body">
-          {cardList.map((card, index) => (
+    <div className="column">
+      <div className="column-header">{name}</div>
+      <div className="column-body">
+        <Skeleton onDrop={() => onDrop?.(id || 0 , 1)} />
+        {cards?.map((card, index) => (
+          <React.Fragment key={index}>
             <Card
-              key={index}
               title={card.title}
               description={card.description}
-              tag={card.tag}
+              tagName={card.tagName}
               tagColor={card.tagColor}
+              id={card.id}
+              column_id={card.column_id}
+              position={index + 1}
+              setActiveCard={setActiveCard}
             />
-          ))}
-        </div>
-
-        <div className="column-footer">
-          <Button
-            text="Add a card"
-            icon={<AddIcon />}
-            iconPosition="start"
-            onClickHandler={onClick}
-            variant="tertiary"
-          />
-        </div>
+            <Skeleton onDrop={() => onDrop?.(id || 0, index + 2)} />
+          </React.Fragment>
+        ))}
       </div>
-    </>
+      <div className="column-footer">
+        <Button
+          text="Add a card"
+          icon={<AddIcon />}
+          iconPosition="start"
+          onClickHandler={onClick}
+          variant="tertiary"
+        />
+      </div>
+    </div>
   );
 };
 

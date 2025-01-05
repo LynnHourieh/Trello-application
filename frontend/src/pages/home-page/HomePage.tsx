@@ -6,15 +6,39 @@ import Button from "../../components/button/Button.tsx";
 import InputField from "../../components/inputField/InputField.tsx";
 import "./home-page-styles.scss";
 import Select from "../../components/select/Select.tsx";
-import { SelectOption } from "../../models/components.ts";
+import {
+  CardProps,
+  ColumnProps,
+  SelectOption,
+  TagProps,
+} from "../../models/components.ts";
 import ColorPicker from "../../components/color-picker/ColorPicker.tsx";
 
 function HomePage() {
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
-  const { control, handleSubmit, reset } = useForm({
+  const [selectedColumnId, setSelectedColumnId] = useState<number | null>(null);
+  const {
+    control: cardControl,
+    handleSubmit: handleCardSubmit,
+    reset: resetCard,
+    formState: cardFormState,
+  } = useForm({
     mode: "all",
   });
+
+  const {
+    control: tagControl,
+    handleSubmit: handleTagSubmit,
+    reset: resetTag,
+    formState: tagFormState,
+  } = useForm({
+    mode: "all",
+  });
+
+  const [columns, setColumns] = useState<ColumnProps[]>([]);
+  const [tags, setTags] = useState<TagProps[]>([]);
+  const [isFetchingTags, setIsFetchingTags] = useState(false);
 
   const [cardDetails, setCardDetails] = useState({
     card_title: "",
@@ -22,110 +46,122 @@ function HomePage() {
     card_tag: "",
   });
 
+  const [activeCard, setActiveCard] = useState<number | null>(null);
+
   const [tagDetails, setTagDetails] = useState({
     tag_name: "",
     tag_color: "#8134af",
   });
 
+  const [cards, setCards] = useState<CardProps[]>([]);
   const tagOptions: SelectOption[] = [
-    {
-      text: "Shopping",
-      value: "Shopping",
-    },
-    {
-      text: "Cleaning",
-      value: "Cleaning",
-    },
+    ...tags.map((tag) => ({
+      text: tag.name,
+      value: tag.id,
+    })),
     {
       text: "Create a New Tag",
-      value: "create_new_tag",
+      value: "0",
     },
   ];
-const cards=[];
 
-  // const cards = [
-  //   {
-  //     title: "Task 1",
-  //     description: "Complete this task",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 2",
-  //     description: "Start project",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 1",
-  //     description: "Complete this task",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 2",
-  //     description: "Start project",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 1",
-  //     description: "Complete this task",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 2",
-  //     description: "Start project",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 1",
-  //     description: "Complete this task",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 2",
-  //     description: "Start project",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 1",
-  //     description: "Complete this task",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 2",
-  //     description: "Start project",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 1",
-  //     description: "Complete this task",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  //   {
-  //     title: "Task 2",
-  //     description: "Start project",
-  //     tag: "Work",
-  //     tagColor: "#FF6347",
-  //   },
-  // ];
-  const handleAddCardClick = () => {
-    setIsCardModalOpen(true); // Open modal
+  const fetchColumns = async () => {
+    const storedColumns = localStorage.getItem("columnsData");
+
+    if (storedColumns) {
+      setColumns(JSON.parse(storedColumns));
+    } else {
+      try {
+        // If no cached data, fetch from the API
+        const response = await fetch(`${process.env.REACT_APP_URL}/columns`);
+        if (!response.ok) {
+          throw new Error("Failed to fetch columns data");
+        }
+        const data = await response.json();
+
+        // Store the fetched data in localStorage
+        localStorage.setItem("columnsData", JSON.stringify(data));
+        setColumns(data);
+      } catch (error) {
+        console.error("Error fetching columns data:", error);
+      }
+    }
+  };
+
+  const fetchTags = async () => {
+    try {
+      const response = await fetch(`${process.env.REACT_APP_URL}/tags`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch tags data");
+      }
+      const data = await response.json();
+      setTags(data);
+    } catch (error) {
+      console.error("Error fetching tags data:", error);
+    }
+  };
+
+  const handleAddTag = async () => {
+    setIsFetchingTags(true);
+    const response = await fetch(`${process.env.REACT_APP_URL}/tags`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: tagDetails.tag_name,
+        color: tagDetails.tag_color,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      setIsFetchingTags(false);
+      throw new Error(errorData.error || "Failed to add new tag");
+    }
+    const newTag = await response.json();
+    setTags((prevTags) => [...prevTags, newTag]);
+
+    setCardDetails((prevState) => ({
+      ...prevState,
+      card_tag: newTag.id,
+    }));
+
+    setIsFetchingTags(false);
+    setIsTagModalOpen(false);
+  };
+
+  useEffect(() => {
+    fetchColumns();
+    fetchTags();
+    fetchCards();
+  }, []);
+
+  const handleAddCardClick = (columnId: number) => {
+    setSelectedColumnId(columnId);
+    if (columnId !== 0) {
+      setIsCardModalOpen(true);
+    }
+  };
+
+  const fetchCards = async () => {
+    const response = await fetch(`${process.env.REACT_APP_URL}/cards`);
+
+    if (!response.ok) {
+      throw new Error("Failed to fetch cards");
+    }
+
+    const data = await response.json();
+    setCards(data);
+    return data;
   };
 
   const handleCloseModal = () => {
-    setIsCardModalOpen(false); // Close modal
+    setIsCardModalOpen(false);
   };
   const handleCloseTagModal = () => {
     setIsTagModalOpen(false);
+    resetTag();
   };
 
   const handleFieldChange = (value: string, field: any) => {
@@ -137,8 +173,6 @@ const cards=[];
     handleTagChange(field.name, value);
   };
 
-  console.log(tagDetails)
-
   const handleTagChange = (name: string, value: string) => {
     setTagDetails((prevDetails) => ({
       ...prevDetails,
@@ -147,7 +181,7 @@ const cards=[];
   };
 
   const handleInputChange = (name: string, value: string) => {
-    if (name === "card_tag" && value === "create_new_tag") {
+    if (name === "card_tag" && value === "0") {
       //open modal
       setIsTagModalOpen(true);
       return;
@@ -158,38 +192,108 @@ const cards=[];
     }));
   };
 
-  const handleAddCard = () => {
-    //call api to add a new card
+  const handleAddCard = async () => {
+    const response = await fetch(`${process.env.REACT_APP_URL}/cards`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title: cardDetails.card_title,
+        description: cardDetails.card_description,
+        tag_id: cardDetails.card_tag,
+        column_id: selectedColumnId,
+      }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || "Failed to add new card");
+    }
+
+    const newCard = await response.json();
+    setCards((prevCards) => [...prevCards, newCard]);
   };
 
-  const handleAddTag=()=>{
-    //call api to add a new tag
-  }
+  const handleCardDrop = async (
+    targetColumnId: number,
+    targetPosition: number
+  ) => {
+    const response = await fetch(
+      `${process.env.REACT_APP_URL}/cards/${activeCard}/position`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          newPosition: targetPosition,
+          targetColumnId: targetColumnId,
+        }),
+      }
+    );
 
-  console.log("cardDetails", cardDetails);
+    if (!response.ok) {
+      throw new Error("Failed to update card position");
+    }
+
+    const data = await response.json();
+    const { cards } = data;
+
+    setCards((prevCards) => {
+      const updatedCardIds = cards.map((card) => card.id);
+      const remainingCards = prevCards.filter(
+        (card) => !updatedCardIds.includes(card.id)
+      );
+
+      return [...remainingCards, ...cards];
+    });
+  };
 
   return (
     <>
       {" "}
       <div className="homepage-container">
-        <Column title="Backlog" cards={cards} onClick={handleAddCardClick} />
-        <Column title="To Do" cards={cards} onClick={handleAddCardClick} />
-        <Column title="Done" cards={[]} onClick={handleAddCardClick} />
+        {tags.length > 0 &&
+          columns.map((column) => {
+            const filteredCards = cards.filter(
+              (card) => card.column_id === column.id
+            );
+            const cardsWithTagDetails = filteredCards.map((card) => {
+              const tag = tags.find((tag) => tag.id === card.tag_id);
+              return {
+                ...card,
+                tagName: tag?.name || "No Tag",
+                tagColor: tag?.color || "#000000",
+              };
+            });
+
+            return (
+              <Column
+                key={column.id}
+                id={column.id}
+                name={column.name}
+                cards={cardsWithTagDetails}
+                onClick={() => handleAddCardClick(column.id ?? 0)}
+                setActiveCard={setActiveCard}
+                onDrop={handleCardDrop}
+              />
+            );
+          })}
       </div>
       <Modal
         isOpen={isCardModalOpen}
         onClose={handleCloseModal}
         title="Add Card"
-        modalActions={[]}
       >
         <form
-          onSubmit={handleSubmit(handleAddCard)}
+          onSubmit={handleCardSubmit(handleAddCard)}
           className="homepage-modalForm"
         >
           <Controller
             key="card_title"
             name="card_title"
-            control={control}
+            control={cardControl}
             defaultValue={cardDetails.card_title}
             rules={{
               required: "Card Title is required",
@@ -257,19 +361,24 @@ const cards=[];
         isOpen={isTagModalOpen}
         onClose={handleCloseTagModal}
         title="Add Tag"
-        modalActions={[]}
       >
         <form
-          onSubmit={handleSubmit(handleAddTag)}
+          onSubmit={handleTagSubmit(handleAddTag)}
           className="homepage-modalForm"
         >
           <Controller
             key="tag_name"
             name="tag_name"
-            control={control}
+            control={tagControl}
             defaultValue={tagDetails.tag_name}
             rules={{
-              required: "Tag Name should be unique",
+              required: "Tag Name is required",
+              validate: (value) => {
+                const isDuplicate = tagOptions.some(
+                  (option) => option.text.toLowerCase() === value.toLowerCase()
+                );
+                return isDuplicate ? "Tag Name must be unique" : true;
+              },
             }}
             render={({ field, fieldState }) => {
               return (
@@ -298,14 +407,14 @@ const cards=[];
             <Button
               text={"Add"}
               type="submit"
-              isLoading={false}
-              disabled={false}
+              isLoading={isFetchingTags}
+              disabled={isFetchingTags}
             />
             <Button
               text={"Cancel"}
               variant="secondary"
               onClickHandler={handleCloseTagModal}
-              disabled={false}
+              disabled={isFetchingTags}
             />
           </div>
         </form>

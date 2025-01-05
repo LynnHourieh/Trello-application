@@ -39,6 +39,7 @@ function HomePage() {
   const [columns, setColumns] = useState<ColumnProps[]>([]);
   const [tags, setTags] = useState<TagProps[]>([]);
   const [isFetchingTags, setIsFetchingTags] = useState(false);
+  const [isAddingCard, setIsAddingCard] = useState(false);
 
   const [cardDetails, setCardDetails] = useState({
     card_title: "",
@@ -128,7 +129,7 @@ function HomePage() {
     }));
 
     setIsFetchingTags(false);
-    setIsTagModalOpen(false);
+    handleCloseTagModal();
   };
 
   useEffect(() => {
@@ -193,6 +194,7 @@ function HomePage() {
   };
 
   const handleAddCard = async () => {
+    setIsAddingCard(true);
     const response = await fetch(`${process.env.REACT_APP_URL}/cards`, {
       method: "POST",
       headers: {
@@ -208,11 +210,14 @@ function HomePage() {
 
     if (!response.ok) {
       const errorData = await response.json();
+      setIsAddingCard(false);
       throw new Error(errorData.error || "Failed to add new card");
     }
 
     const newCard = await response.json();
     setCards((prevCards) => [...prevCards, newCard]);
+    setIsAddingCard(false);
+    handleCloseModal();
   };
 
   const handleCardDrop = async (
@@ -345,14 +350,14 @@ function HomePage() {
             <Button
               text={"Add"}
               type="submit"
-              isLoading={false}
-              disabled={false}
+              isLoading={isAddingCard}
+              disabled={isAddingCard}
             />
             <Button
               text={"Cancel"}
               variant="secondary"
               onClickHandler={handleCloseModal}
-              disabled={false}
+              disabled={isAddingCard}
             />
           </div>
         </form>

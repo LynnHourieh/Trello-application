@@ -5,7 +5,7 @@ import { SkeletonProps } from "../../models/components";
 const Skeleton: React.FC<SkeletonProps> = ({ onDrop }) => {
   const [showSkeleton, setShowSkeleton] = useState(false);
   return (
-    <div
+    <span
       onDragEnter={() => {
         setShowSkeleton(true);
       }}
@@ -17,8 +17,8 @@ const Skeleton: React.FC<SkeletonProps> = ({ onDrop }) => {
       onDragOver={(e) => e.preventDefault()}
       className={showSkeleton ? "skeleton-card" : "hide-skeleton-card"}
     >
-      Drop here
-    </div>
+<span className={"skeleton-content"}>Drop here</span>
+    </span>
   );
 };
 

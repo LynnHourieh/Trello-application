@@ -3,7 +3,7 @@
 .column {
   display: flex;
   flex-direction: column;
-  border-radius: 8px;
+  border-radius: 12px;
   background-color: #f4f4f4;
   padding: 16px;
   width: 255px;
@@ -20,11 +20,8 @@
   .column-body {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-
+    gap:5px;
     width: 270px;
-    margin-bottom: 16px;
-    /* Set a fixed height for the column body */
     height: 390px; /* Adjust height to fit 3 cards */
     overflow-y: auto; /* Allow vertical scrolling */
     overflow-x: hidden; /* Prevent horizontal scrolling */
@@ -33,13 +30,13 @@
   .column-footer {
     display: flex;
     justify-content: center;
-   
+
     button {
       width: 260px;
       color: $text-secondary;
       font-size: 14px;
-      &:hover{
-        color:$secondary
+      &:hover {
+        color: $secondary;
       }
     }
   }

@@ -20,10 +20,14 @@ function HomePage() {
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<number | null>(null);
-  const { control: cardControl, handleSubmit: handleCardSubmit , reset: resetCard,} = useForm({
+  const {
+    control: cardControl,
+    handleSubmit: handleCardSubmit,
+    reset: resetCard,
+  } = useForm({
     mode: "all",
   });
-
+  const baseUrl = `http://localhost:8000/api`;
   const {
     control: tagControl,
     handleSubmit: handleTagSubmit,
@@ -88,7 +92,7 @@ function HomePage() {
     } else {
       try {
         // If no cached data, fetch from the API
-        const response = await fetch(`${process.env.REACT_APP_URL}/columns`);
+        const response = await fetch(`${baseUrl}/columns`);
         if (!response.ok) {
           throw new Error("Failed to fetch columns data");
         }
@@ -105,7 +109,7 @@ function HomePage() {
 
   const fetchTags = async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_URL}/tags`);
+      const response = await fetch(`${baseUrl}/tags`);
       if (!response.ok) {
         throw new Error("Failed to fetch tags data");
       }
@@ -120,7 +124,7 @@ function HomePage() {
     setIsFetchingTags(true);
 
     const response = await fetch(
-      `${process.env.REACT_APP_URL}/tags/${cardDetails.card_tag}`,
+      `${baseUrl}/tags/${cardDetails.card_tag}`,
       {
         method: "PUT",
         headers: {
@@ -152,7 +156,7 @@ function HomePage() {
 
   const handleAddTag = async () => {
     setIsFetchingTags(true);
-    const response = await fetch(`${process.env.REACT_APP_URL}/tags`, {
+    const response = await fetch(`${baseUrl}/tags`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +230,7 @@ function HomePage() {
   };
 
   const fetchCards = async () => {
-    const response = await fetch(`${process.env.REACT_APP_URL}/cards`);
+    const response = await fetch(`${baseUrl}/cards`);
 
     if (!response.ok) {
       throw new Error("Failed to fetch cards");
@@ -294,7 +298,7 @@ function HomePage() {
 
   const handleAddCard = async () => {
     setIsAddingCard(true);
-    const response = await fetch(`${process.env.REACT_APP_URL}/cards`, {
+    const response = await fetch(`${baseUrl}/cards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -328,7 +332,7 @@ function HomePage() {
     targetPosition: number
   ) => {
     const response = await fetch(
-      `${process.env.REACT_APP_URL}/cards/${activeCard}/position`,
+      `${baseUrl}/cards/${activeCard}/position`,
       {
         method: "PUT",
         headers: {
@@ -379,7 +383,7 @@ function HomePage() {
   };
 
   const handleAddLogs = async (description) => {
-    const response = await fetch(`${process.env.REACT_APP_URL}/logs`, {
+    const response = await fetch(`${baseUrl}/logs`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -414,7 +418,7 @@ function HomePage() {
   const handleSubmitEditCard = async () => {
     setIsAddingCard(true);
     const response = await fetch(
-      `${process.env.REACT_APP_URL}/cards/${cardID}`,
+      `${baseUrl}/cards/${cardID}`,
       {
         method: "PUT",
         headers: {
@@ -484,9 +488,8 @@ function HomePage() {
         <div className="homepage-cardPreview">
           <Card
             title={cardDetails.card_title || "Title"}
-            description={cardDetails.card_description || "Description"
-            }
-            tagName={tagDetails.tag_name || ""}
+            description={cardDetails.card_description || "Description"}
+            tagName={tagDetails.tag_name || "tagName"}
             backgroundColor={tagDetails.bg_color || "#8134af"}
             fontColor={tagDetails.font_color || "#FFFF"}
           />

@@ -21,13 +21,11 @@ DB_HOST= //database host
 DB_DATABASE= //database name 
 DB_PASSWORD=//your_db_password
 DB_PORT=//your_db_port usually :5432 
-PORT=8000 //backend port number
+PORT=8000 //Backend port number
 8. Right-click on the backend folder and open in the integrated terminal.
 9. Run the backend server: npm run start
 ### Frontend Setup
-1. Add .env file in the frontend directory.
-2. Add the following value in .env: REACT_APP_URL=http://localhost:8000/api/ or any port number you choose for backend port. 
-3. Right-click to open the terminal in the frontend folder.
-4. Start the frontend server:npm run start
+1. Right-click to open the terminal in the frontend folder.
+2. Start the frontend server:npm run start
 ### Enjoy your application!
 

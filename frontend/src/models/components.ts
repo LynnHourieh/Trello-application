@@ -59,6 +59,7 @@ export interface ColumnProps {
   onClick?: (value: any) => void;
   onDrop?: (targetColumnId: number, targetPosition: number) => void;
   setActiveCard?: (isActive: number | null) => void;
+  onClickHandler?: (cardId:number) => void; 
 }
 
 export interface TagProps {
@@ -80,6 +81,8 @@ export interface CardProps {
   backgroundColor?:string;
   onDrop?: (targetColumnId: number, targetPosition: number) => void;
   setActiveCard?: (isActive: number | null) => void;
+  isEditable?:boolean;
+  onClickHandler?: () => void; 
 }
 
 export interface SkeletonProps {

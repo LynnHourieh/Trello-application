@@ -30,6 +30,7 @@
   display: flex;
   justify-content: space-between;
   padding: $padding-md;
+  border-bottom: 1px solid #ddd;
   svg {
     width: 20px;
     height: 20px;
@@ -38,7 +39,7 @@
 }
 
 .modal-body {
-  padding: 0 $padding-md;
+  padding: $padding-md;
   
 }
 

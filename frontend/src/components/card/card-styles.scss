@@ -1,47 +1,60 @@
 @import "../../themes.scss";
 
 .card {
-    display: flex;
-    flex-direction: column;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    min-height: 142px;
-    cursor: grab;
-  }
-  .card:hover {
-    border: 1px solid $secondary; /* Change to your desired color on hover */
-  }
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-height: 142px;
+  cursor: grab;
+}
+.card:hover {
+  border: 1px solid $secondary; /* Change to your desired color on hover */
+}
+
+.card-header {
+  padding: 8px 12px;
+  color: white;
+  font-weight: bold;
+  text-transform: uppercase;
+  display: flex;
+  justify-content: space-between;
+  button {
   
-  .card-header {
-    padding: 8px 12px;
-    color: white;
-    font-weight: bold;
-    text-transform: uppercase;
+      opacity: 0;
+      transition: opacity 0.3s ease-in-out; 
+    svg {
+      fill: #5b5b5b;
+    }
   }
-  
-  .tag {
-    font-size: 12px;
-    border-radius: 12px;
-    padding: 4px 8px;
-    background-color: inherit;
+
+   .card:hover & button {
+    opacity: 1;
   }
-  
-  .card-body {
-    background-color: white;
-    padding: 16px;
-    border-top: 1px solid #eee;
-    min-height: 50px;
-  }
-  
-  .title {
-    font-size: 18px;
-    margin: 0 0 8px;
-    color: #333;
-  }
-  
-  .description {
-    font-size: 14px;
-    color: #777;
-  }
-  
+}
+
+.tag {
+  font-size: 12px;
+  border-radius: 12px;
+  padding: 4px 8px;
+  background-color: inherit;
+}
+
+.card-body {
+  background-color: white;
+  padding: 16px;
+  border-top: 1px solid #eee;
+  min-height: 50px;
+}
+
+.title {
+  font-size: 18px;
+  margin: 0 0 8px;
+  color: #333;
+}
+
+.description {
+  font-size: 14px;
+  color: #777;
+}

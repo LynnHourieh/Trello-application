@@ -211,4 +211,70 @@ cardsRouter.put("/cards/:id/position", async (req, res) => {
   }
 });
 
+// Update an existing card
+cardsRouter.put("/cards/:id", async (req, res) => {
+  try {
+    const { id } = req.params; // Card ID from the URL
+    const { title, description, tag_id } = req.body;
+
+    // Validate input: At least one field to update must be provided
+    if (!title && !description && !tag_id) {
+      return res.status(400).json({
+        error: "At least one field (title, description, tag_id) must be provided for update",
+      });
+    }
+
+    // Build the SQL query dynamically based on the fields provided
+    const fieldsToUpdate = [];
+    const values = [];
+    let queryIndex = 1;
+
+    if (title) {
+      fieldsToUpdate.push(`title = $${queryIndex++}`);
+      values.push(title);
+    }
+    if (description) {
+      fieldsToUpdate.push(`description = $${queryIndex++}`);
+      values.push(description);
+    }
+    if (tag_id) {
+      fieldsToUpdate.push(`tag_id = $${queryIndex++}`);
+      values.push(tag_id);
+    }
+
+    // Add the card ID to the values array
+    values.push(id);
+
+    // If no fields are specified, return a validation error
+    if (fieldsToUpdate.length === 0) {
+      return res.status(400).json({
+        error: "No fields to update",
+      });
+    }
+
+    // Construct the SQL query
+    const queryText = `
+      UPDATE cards
+      SET ${fieldsToUpdate.join(", ")}
+      WHERE id = $${queryIndex}
+      RETURNING *;
+    `;
+
+    // Execute the query
+    const result = await query(queryText, values);
+
+    // If no card was updated, return a 404 error
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "Card not found" });
+    }
+
+    // Respond with the updated card
+    res.status(200).json(result.rows[0]);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send("Server error");
+  }
+});
+
+
 export default cardsRouter;

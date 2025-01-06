@@ -41,22 +41,26 @@ const CardLogs: React.FC<CardLogsProps> = ({ logs }) => {
 
   return (
     <div className="card-logs">
-      {Object.keys(groupedLogs).map((time) => (
-        <div key={time} className="card-logs-group">
-          <div className="card-logs-header">
-            <h3>{time}</h3>
+      {logs.length === 0 ? (
+        <p>No logs available</p>
+      ) : (
+        Object.keys(groupedLogs).map((time) => (
+          <div key={time} className="card-logs-group">
+            <div className="card-logs-header">
+              <h3>{time}</h3>
+            </div>
+            <ul>
+              {groupedLogs[time].map((log) => (
+                <li key={log.timestamp}>
+                  <div className="card-log-entry">
+                    <span className="log-description">{log.description}</span>
+                  </div>
+                </li>
+              ))}
+            </ul>
           </div>
-          <ul>
-            {groupedLogs[time].map((log) => (
-              <li key={log.timestamp}>
-                <div className="card-log-entry">
-                  <span className="log-description">{log.description}</span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
+        ))
+      )}
     </div>
   );
 };

@@ -20,7 +20,7 @@ function HomePage() {
   const [isCardModalOpen, setIsCardModalOpen] = useState(false);
   const [isTagModalOpen, setIsTagModalOpen] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<number | null>(null);
-  const { control: cardControl, handleSubmit: handleCardSubmit } = useForm({
+  const { control: cardControl, handleSubmit: handleCardSubmit , reset: resetCard,} = useForm({
     mode: "all",
   });
 
@@ -238,6 +238,7 @@ function HomePage() {
   };
 
   const handleCloseModal = () => {
+    resetCard();
     setCardDetails({
       card_title: "",
       card_description: "",

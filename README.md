@@ -27,5 +27,7 @@ PORT=8000 //Backend port number
 ### Frontend Setup
 1. Right-click to open the terminal in the frontend folder.
 2. Start the frontend server:npm run start
+
+ScreenShots and Postman Docs are added to repository.
 ### Enjoy your application!
 

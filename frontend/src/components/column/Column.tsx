@@ -1,11 +1,10 @@
 import React from "react";
 import Card from "../card/Card.tsx";
-import "./column-styles.scss"; 
+import "./column-styles.scss";
 import { AddIcon } from "../../assests/images/icons.tsx";
 import Button from "../button/Button.tsx";
 import { ColumnProps } from "../../models/components.ts";
 import Skeleton from "../skeleton/Skeleton.tsx";
-
 
 const Column: React.FC<ColumnProps> = ({
   id,
@@ -14,12 +13,13 @@ const Column: React.FC<ColumnProps> = ({
   onClick,
   setActiveCard,
   onDrop,
+  onClickHandler,
 }) => {
   return (
     <div className="column">
       <div className="column-header">{name}</div>
       <div className="column-body">
-        <Skeleton onDrop={() => onDrop?.(id || 0 , 1)} />
+        <Skeleton onDrop={() => onDrop?.(id || 0, 1)} />
         {cards?.map((card, index) => (
           <React.Fragment key={index}>
             <Card
@@ -30,6 +30,8 @@ const Column: React.FC<ColumnProps> = ({
               backgroundColor={card.backgroundColor}
               id={card.id}
               setActiveCard={setActiveCard}
+              isEditable
+              onClickHandler={() => onClickHandler?.(card?.id || 0)}
             />
             <Skeleton onDrop={() => onDrop?.(id || 0, index + 2)} />
           </React.Fragment>

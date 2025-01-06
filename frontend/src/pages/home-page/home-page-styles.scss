@@ -64,14 +64,16 @@
     Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
 }
 
+#homepage-button{
+  height: 42px;
+  width: 106px;
+}
+
 .homepage-select {
   display: flex;
   gap: 5px;
   align-items: end;
-  button {
-    height: 42px;
-    width: 106px;
-  }
+
   .select-root {
     width: 340px;
    
@@ -85,5 +87,13 @@
         }
       }
     }
+  }
+}
+.homepage-cardPreview{
+  display: flex;
+  justify-content: center;
+  .card{
+    cursor: pointer;
+
   }
 }

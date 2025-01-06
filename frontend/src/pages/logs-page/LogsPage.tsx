@@ -6,7 +6,7 @@ function LogsPage() {
 
   useEffect(() => {
     const fetchLogs = async () => {
-      const response = await fetch(`${process.env.REACT_APP_URL}/logs`); // API endpoint to fetch logs
+      const response = await fetch(`${process.env.REACT_APP_URL}/logs`);
       if (!response.ok) {
         throw new Error("Failed to fetch logs");
       }
@@ -16,7 +16,7 @@ function LogsPage() {
 
     fetchLogs();
   }, []);
-  console.log("logs", logs);
+
   return <CardLogs logs={logs} />;
 }
 

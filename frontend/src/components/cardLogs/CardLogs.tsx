@@ -5,16 +5,21 @@ import { CardLogsProps } from "../../models/components";
 const CardLogs: React.FC<CardLogsProps> = ({ logs }) => {
   const formatTime = (time: string): string => {
     const today = new Date();
-    const logDate = new Date(time);
-    const diffTime = today.getTime() - logDate.getTime();
-    const diffDays = Math.floor(diffTime / (1000 * 3600 * 24));
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
 
-    if (diffDays === 0) {
+    const logDate = new Date(time);
+    const logDateString = logDate.toLocaleDateString();
+
+    const todayString = today.toLocaleDateString();
+    const yesterdayString = yesterday.toLocaleDateString();
+
+    if (logDateString === todayString) {
       return "Today";
-    } else if (diffDays === 1) {
+    } else if (logDateString === yesterdayString) {
       return "Yesterday";
     } else {
-      return logDate.toLocaleDateString();
+      return logDateString;
     }
   };
 
@@ -36,8 +41,6 @@ const CardLogs: React.FC<CardLogsProps> = ({ logs }) => {
 
   return (
     <div className="card-logs">
-        
-     
       {Object.keys(groupedLogs).map((time) => (
         <div key={time} className="card-logs-group">
           <div className="card-logs-header">
